@@ -1,0 +1,144 @@
+* {
+    text-align: center;
+    background-color: #121212;
+    color: #ffffff;
+    font-family: "Open Sans", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    font-variation-settings:
+        "wdth" 100;
+}
+
+.logo {
+    width: 40px;
+}
+
+.flexbox > .refresh {
+    width: 1em;
+    background-color: #274268;
+}
+
+.flexbox > .refresh-rotate {
+    width: 1em;
+    background-color: #274268;
+    animation-name: rotate;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+    
+}
+
+.button {
+    background-color: #274268;
+    text-decoration: none;
+    width: 200px;
+    height: 60px;
+    border-radius: 10px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    align-content: center;
+}
+
+.button_small {
+    background-color: #274268;
+    width: 160px;
+    height: 40px;
+    border-radius: 10px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    align-content: center;
+}
+
+.button_small:active {
+    box-shadow: 2px 2px 5px #cacfdc;
+}
+
+.button_small_locked {
+    background-color: #111d2e;
+    width: 160px;
+    height: 40px;
+    border-radius: 10px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    align-content: center;
+}
+
+.button_small_locked > .flexbox {
+    background-color: #111d2e;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+}
+
+.button_small_locked > .flexbox > div {
+    background-color: #111d2e;
+    width: 105px;
+}
+
+.button_small_locked > .flexbox > .refresh {
+    width: 1em;
+    background-color: #111d22;
+}
+
+.button_small_locked > .flexbox > .refresh-rotate {
+    width: 1em;
+    background-color: #111d22;
+    animation-name: rotate;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+
+.grid {
+    display: grid;
+    margin-left: auto;
+    margin-right: auto;
+    width: 150px;
+    grid-template-columns: 50px 50px 50px;
+}
+
+.button_small > .flexbox {
+    background-color: #274268;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+}
+
+.button_small > .flexbox > div {
+    background-color: #274268;
+    width: 105px;
+}
+
+.pklot_flexbox {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    max-width: 1300px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.pklot_image {
+    width: 320px;
+}
+
+.identify_spots {
+    margin-top: 15px;
+}
