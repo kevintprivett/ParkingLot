@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  pklot-model:
+    image: pklot-model:latest
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '2'
+    ports:
+      - "8030:8030"
+    environment:
+      - ENV=production
+    restart: unless-stopped
