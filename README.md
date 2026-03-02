@@ -2,21 +2,19 @@
 
 This project is a demonstration of my capstone project for WGU, where I trained an object detection model to detect occupied and open parking spots using overhead images of the parking lot.
 
-The idea for this project was to explore the possibility of providing an alternative to expensive and capital-intensive parking occupancy systems used in some parking structures by utilizing existing parking lot security cameras and modern object detection models to detect parking spot occupancy.  As overhead security cameras are already commonly found in outdoor parking lots, there is an opportunity to deploy a model such as this to detect occupancy and then tie in to on the ground signage to inform drivers of how many spots remain in a given area of the parking lot, or even to tie in lights for each spot to inform drivers where an empty spot is located.  This project only uses an AWS Lambda function operating without access to a GPU, and is still able to achieve a 6-second inference time when hot.  It could then handle 10 different parking lot cameras if updating once a minute.  The ongoing costs would then only be the cost of running this small container or Lambda function, maintenance of a handful of security cameras (which is already an existing maintenance cost), and maintenance of signage. This is certainly an attractive solution compared to individual spot sensors.
+The idea for this project was to explore the possibility of providing an alternative to expensive and capital-intensive parking occupancy systems used in some parking structures by utilizing existing parking lot security cameras and modern object detection models to detect parking spot occupancy.  As overhead security cameras are already commonly found in outdoor parking lots, there is an opportunity to deploy a model such as this to detect occupancy and then tie in to on the ground signage to inform drivers of how many spots remain in a given area of the parking lot, or even to tie in lights for each spot to inform drivers where an empty spot is located.  This project can run on a CPU bound docker image and is still able to achieve a 6-second inference time when hot.  It could then handle 10 different parking lot cameras if updating once a minute.  The ongoing costs would then only be the cost of running this small container, maintenance of a handful of security cameras (which is already an existing maintenance cost), and maintenance of signage. This is certainly an attractive solution compared to individual spot sensors.
 
 #### Successes of this project:
   - Achieved 79.5% recall off of only 4 hours of training
   - Was able to manage inference on the three different parking lot camera views without issue
-  - Low cost for the application, able to be run on AWS Lambda functions with relatively low hot runtimes (~6 seconds)
+  - Low cost for the application, docker image needs around 2GB to run.
 
 #### Current limitations of this project:
   - Not generalizable.  This project would require having annotated images for a specific camera view to be trained for that specific camera view.
-  - Cold start times are significant (~30 seconds).  This is not a significant issue, as regular calls would keep the function hot; it could be explicitly kept hot using AWS Lambda Provisioned Concurrency, or be hosted in an always-on container hosted by Amazon ECS or equivalent.  An application that requires updates every minute or longer would also obviously not be affected by a 30-second cold start time.
   - Additional training time is needed.  The study that created the PKLot dataset was able to achieve over 99% detection rates, showing that there is more performance to be gained on this limited project.  Additional training time or further exploration into different object detection models should result in much better performance to make this project production-ready.
 
 The deployed website can be found here:  
 https://kevintprivett.github.io/ParkingLot/  
-*Note: If inference is run while the AWS Lambda function is cold, it may take around 30 seconds to complete.  After the function is warm, subsequent inferences should be around 6 seconds.*
 
 The trained model can be found here:  
 https://drive.google.com/file/d/1H-LnErIutBlWUuNQNyHvtIMp0K05Vw0n/view?usp=drivesdk
@@ -41,35 +39,29 @@ Clone this repo to your machine and navigate to the FrontEnd folder, then run:
 
 Vite should now be running on http://localhost:5173
 
-Note that this locally running version is still making calls to an AWS Lambda function.
-
-To run and build the TensorFlow model, download the [trained model](https://drive.google.com/file/d/1H-LnErIutBlWUuNQNyHvtIMp0K05Vw0n/view?usp=drivesdk) and extract its contents into the Lambda folder like so:
+To run the TensorFlow model, download the [trained model](https://drive.google.com/file/d/1H-LnErIutBlWUuNQNyHvtIMp0K05Vw0n/view?usp=drivesdk) and extract its contents into the Model/Docker folder like so:
 
 ```
   ParkingLot/
     FrontEnd/
-    Lambda/
-      exported_model/
-        {exported_model contents}
+    Model/
+      Docker/
+        exported_model/
+          {exported_model contents}
 ```
 
-The model can be containerized and uploaded to AWS Lambda by navigating to the Lambda folder and [following this documentation from AWS](https://aws.amazon.com/blogs/machine-learning/using-container-images-to-run-tensorflow-models-in-aws-lambda/), with the following commands, assuming a current version of Docker and the AWS CLI:
+The model can be containerized and deployed using docker.
 
 ```shell
+  # navigate to ParkingLot/Model/Docker
+
   # Build the docker image
-  docker build -t <DOCKER-IMAGE-NAME> .
+  docker build -t pklot-model
   
-  # Create a ECR repository
-  aws ecr create-repository --repository-name <DOCKER-IMAGE-NAME> --image-scanning-configuration scanOnPush=true --region <REGION>
-  
-  # Tag the image to match the repository name
-  docker tag <DOCKER-IMAGE-NAME>:latest <AWS_ACCOUNT_ID>.dkr.ecr.<REGION>.amazonaws.com/<DOCKER-IMAGE-NAME>:latest
-  
-  # Register docker to ECR
-  aws ecr get-login-password --region <REGION> | docker login --username AWS --password-stdin <AWS_ACCOUNT_ID>.dkr.ecr.<REGION>.amazonaws.com
-  
-  # Push the image to ECR
-  docker push <AWS_ACCOUNT_ID>.dkr.ecr.<REGION>.amazonaws.com/<DOCKER-IMAGE-NAME>:latest
+  # Deploy with docker compose
+  docker compose up
 ```
 
-At this point, you can create your AWS Lambda function with this Docker image, create a function URL, and update the front end to point to this function URL.
+This will deploy the docker onto port 8030.  Rename the .env.example file in the FrontEnd to .env and change the VITE_INFER_API_URL to http://localhost:8030/infer
+
+At this point, the front end should be able to connect to the TensorFlow model and start identifying empty and filled parking spots.
