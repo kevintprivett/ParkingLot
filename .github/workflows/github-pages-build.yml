@@ -26,7 +26,6 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-      VITE_INFER_API_URL: ${{ vars.VITE_INFER_API_URL }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -37,6 +36,8 @@ jobs:
           cache-dependency-path: './FrontEnd'
           node-version: lts/*
           cache: 'npm'
+          env:
+            VITE_INFER_API_URL: ${{ vars.VITE_INFER_API_URL }}
       - name: Install dependencies
         working-directory: ./FrontEnd
         run: npm ci
