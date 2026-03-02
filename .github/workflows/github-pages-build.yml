@@ -36,14 +36,14 @@ jobs:
           cache-dependency-path: './FrontEnd'
           node-version: lts/*
           cache: 'npm'
-          env:
-            VITE_INFER_API_URL: ${{ vars.VITE_INFER_API_URL }}
       - name: Install dependencies
         working-directory: ./FrontEnd
         run: npm ci
       - name: Build
         working-directory: ./FrontEnd
         run: npm run build
+        env:
+          VITE_INFER_API_URL: ${{ vars.VITE_INFER_API_URL }}
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
