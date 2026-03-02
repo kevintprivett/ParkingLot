@@ -1,5 +1,5 @@
-import PKLot from './components/PKLot'
-import Footer from './components/Footer'
+import PKLot from "./components/PKLot"
+import Footer from "./components/Footer"
 
 function App() {
   return (
