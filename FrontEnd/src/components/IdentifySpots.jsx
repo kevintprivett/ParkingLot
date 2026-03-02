@@ -2,6 +2,8 @@ import { useState } from 'react'
 import refreshLogo from '../assets/arrows-rotate.svg'
 import axios from 'axios'
 
+const INFER_API_URL = import.meta.env.VITE_INFER_API_URL
+
 const IdentifySpots = (props) => {
     const [refreshClass, setRefreshClass] = useState('refresh')
 
@@ -31,8 +33,7 @@ const IdentifySpots = (props) => {
           props.imageBlob
         )
 
-        const post_url = 'https://api.kevinprivett.com/infer'
-        const response = await axios.post(post_url, {
+        const response = await axios.post(INFER_API_URL, {
           image_data: base64String
         })
 
