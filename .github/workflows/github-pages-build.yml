@@ -41,7 +41,9 @@ jobs:
         run: npm ci
       - name: Build
         working-directory: ./FrontEnd
-        run: npm run build
+        run: |
+          echo "API URL is set: ${VITE_INFER_API_URL"
+          npm run build
         env:
           VITE_INFER_API_URL: ${{ vars.VITE_INFER_API_URL }}
       - name: Setup Pages
