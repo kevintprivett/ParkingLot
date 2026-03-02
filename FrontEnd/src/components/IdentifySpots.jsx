@@ -31,7 +31,7 @@ const IdentifySpots = (props) => {
           props.imageBlob
         )
 
-        const post_url = 'https://xdde6o6kmyxji2hqqmf4kwmofy0dzvqp.lambda-url.us-west-1.on.aws'
+        const post_url = 'https://api.kevinprivett.com/infer'
         const response = await axios.post(post_url, {
           image_data: base64String
         })
